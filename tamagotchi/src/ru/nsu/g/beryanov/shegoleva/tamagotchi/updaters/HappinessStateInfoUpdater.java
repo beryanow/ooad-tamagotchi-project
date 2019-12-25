@@ -1,38 +1,28 @@
 package ru.nsu.g.beryanov.shegoleva.tamagotchi.updaters;
 
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.ModelPropertyChange;
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.model.TamagotchiModel;
+import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.ChiefWindowController;
 
-import java.util.TimerTask;
+import java.beans.PropertyChangeSupport;
 
-public class HappinessStateInfoUpdater extends TimerTask {
-    private final ModelPropertyChange modelPropertyChange;
-    private TamagotchiModel tamagotchiModel;
+public class HappinessStateInfoUpdater extends AbstractUpdater {
 
-    public HappinessStateInfoUpdater(ModelPropertyChange modelPropertyChange, TamagotchiModel tamagotchiModel) {
-        this.modelPropertyChange = modelPropertyChange;
-        this.tamagotchiModel = tamagotchiModel;
+    public HappinessStateInfoUpdater(PropertyChangeSupport modelPropertyChange, ChiefWindowController chiefWindowController) {
+        super(modelPropertyChange, chiefWindowController);
     }
 
-    private void accessHappiness() {
-        if (tamagotchiModel.getHealthState() < 30) {
-            int happinessState = tamagotchiModel.getHappinessState();
-            if (happinessState > 0) {
-                --happinessState;
-            }
-            tamagotchiModel.setHappinessState(happinessState);
-        }
+    @Override
+    void access() {
+       getChiefWindowController().getTamagotchiModelController().accessHappiness();
     }
 
-    private void updateInfo() {
-        modelPropertyChange.firePropertyChange("HappinessStateProperty", 0, 1);
+    @Override
+    void updateInfo() {
+        getModelPropertyChange().firePropertyChange("HappinessStateProperty", 0, 1);
     }
 
     @Override
     public void run() {
-        synchronized (modelPropertyChange) {
-            accessHappiness();
-        }
+        access();
         updateInfo();
     }
 }

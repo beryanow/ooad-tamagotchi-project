@@ -1,6 +1,5 @@
 package ru.nsu.g.beryanov.shegoleva.tamagotchi.view;
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.TamagotchiModelController;
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.WelcomeWindowController;
+import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.ChiefWindowController;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -9,61 +8,45 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class WelcomeWindowView {
+public class WelcomeWindowView extends JFrame {
     private boolean newPetFlag;
     private boolean enterOwnerFlag;
-    private JButton newPetButton;
     private JButton startGameButton;
-    private JButton ownerInfoButton;
     private JFrame welcomeFrame;
 
-    public void setNewPetFlag() {
+    void setNewPetFlag() {
         newPetFlag = true;
     }
 
-    public void setEnterOwnerFlag() {
+    void setEnterOwnerFlag() {
         enterOwnerFlag = true;
     }
 
-    public boolean getNewPetFlag() {
+    boolean getNewPetFlag() {
         return newPetFlag;
     }
 
-    public boolean getEnterOwner() {
+    boolean getEnterOwner() {
         return enterOwnerFlag;
     }
 
-    public JFrame getWelcomeFrame() {
-        return welcomeFrame;
-    }
-
-    public JButton getNewPetButton() {
-        return newPetButton;
-    }
-
-    public JButton getStartGameButton() {
+    JButton getStartGameButton() {
         return startGameButton;
     }
 
-    private void createWelcomeWindow() throws IOException {
+    public void createWelcomeWindow(ChiefWindowController chiefWindowController) {
         welcomeFrame = new JFrame("Начало");
         welcomeFrame.getContentPane().setBackground(Color.white);
 
-        TamagotchiModelController tamagotchiModelController = new TamagotchiModelController(this);
-        WelcomeWindowController welcomeWindowController = new WelcomeWindowController(tamagotchiModelController, this, tamagotchiModelController.getTamagotchiModel());
+        JButton newPetButton = new JButton("Выбрать питомца");
+        newPetButton.addActionListener(e -> chiefWindowController.startCreatePetWindow());
 
-        newPetButton = new JButton("Выбрать питомца");
-        newPetButton.setActionCommand("newPetButtonPressed");
-        newPetButton.addActionListener(welcomeWindowController);
-
-        ownerInfoButton = new JButton("Ввести данные владельца");
-        ownerInfoButton.setActionCommand("ownerInfoButtonPressed");
-        ownerInfoButton.addActionListener(welcomeWindowController);
+        JButton ownerInfoButton = new JButton("Ввести данные владельца");
+        ownerInfoButton.addActionListener(e -> chiefWindowController.startEnterOwnerWindow());
 
         startGameButton = new JButton("Начать игру Тамагочи");
         startGameButton.setEnabled(false);
-        startGameButton.setActionCommand("startGameButtonPressed");
-        startGameButton.addActionListener(welcomeWindowController);
+        startGameButton.addActionListener(e -> chiefWindowController.startGameWindow());
 
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setBackground(Color.white);
@@ -82,7 +65,13 @@ public class WelcomeWindowView {
         welcomeFrame.setSize(360, 500);
         welcomeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        BufferedImage bufferedPicture = ImageIO.read(new File("resources/main.png"));
+        BufferedImage bufferedPicture = null;
+        try {
+            bufferedPicture = ImageIO.read(new File("resources/main.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         JLabel picLabel = new JLabel(new ImageIcon(bufferedPicture));
 
         welcomeFrame.add(picLabel);
@@ -93,10 +82,9 @@ public class WelcomeWindowView {
         welcomeFrame.setVisible(true);
     }
 
-    public WelcomeWindowView() throws IOException {
+    public WelcomeWindowView()  {
         newPetFlag = false;
         enterOwnerFlag = false;
-        createWelcomeWindow();
     }
 }
 

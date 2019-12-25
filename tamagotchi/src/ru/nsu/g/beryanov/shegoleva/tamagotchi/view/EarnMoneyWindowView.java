@@ -1,7 +1,6 @@
 package ru.nsu.g.beryanov.shegoleva.tamagotchi.view;
 
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.TamagotchiModelController;
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.EarnMoneyWindowController;
+import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.ChiefWindowController;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -10,29 +9,25 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class EarnMoneyWindowView {
+public class EarnMoneyWindowView extends JFrame {
     private JFrame earnMoneyFrame;
-    private JButton goWorkButton;
-    private JButton sellSomethingButton;
-    private JButton askPeopleForMoneyButton;
-    private JButton okayEarnMoneyButton;
     private JLabel petPicture;
 
-    public JLabel getPetPicture() {
+    private JLabel getPetPicture() {
         return petPicture;
     }
 
-    public JFrame getEarnMoneyFrame() {
+    private JFrame getEarnMoneyFrame() {
         return earnMoneyFrame;
     }
 
-    private void createEarnMoneyWindow(TamagotchiModelController tamagotchiModelController) {
+    public void createEarnMoneyWindow(ChiefWindowController chiefWindowController) {
         earnMoneyFrame = new JFrame("Заработок денег");
         earnMoneyFrame.getContentPane().setBackground(Color.white);
 
         BufferedImage bufferedPicture = null;
         try {
-            switch (tamagotchiModelController.getTamagotchiModel().getPetType()) {
+            switch (chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getPetType()) {
                 case "Ёж":
                     bufferedPicture = ImageIO.read(new File("resources/sonic_wait.png"));
                     break;
@@ -44,27 +39,122 @@ public class EarnMoneyWindowView {
                     break;
             }
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         petPicture = new JLabel(new ImageIcon(bufferedPicture));
 
-        EarnMoneyWindowController earnMoneyWindowController = new EarnMoneyWindowController(this, tamagotchiModelController);
+        JButton goWorkButton = new JButton("Пойти на работу");
+        goWorkButton.addActionListener(e -> {
+            switch (chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getPetType()) {
+                case "Ёж":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/sonic_collect.png"));
+                        chiefWindowController.getEarnMoneyWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case "Заяц":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/pinky_collect.png"));
+                        chiefWindowController.getEarnMoneyWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case "Лис":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/puppy_collect.png"));
+                        chiefWindowController.getEarnMoneyWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+            }
 
-        goWorkButton = new JButton("Пойти на работу");
-        goWorkButton.setActionCommand("goWorkButtonPressed");
-        goWorkButton.addActionListener(earnMoneyWindowController);
+            int coinsAmount = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getCoinsAmount();
+            coinsAmount += 50;
+            chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setCoinsAmount(coinsAmount);
+            chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("OwnerProperty", 0, 1);
+        });
 
-        sellSomethingButton = new JButton("Продать ненужную вещь");
-        sellSomethingButton.setActionCommand("sellSomethingButtonPressed");
-        sellSomethingButton.addActionListener(earnMoneyWindowController);
+        JButton sellSomethingButton = new JButton("Продать ненужную вещь");
+        sellSomethingButton.addActionListener(e -> {
+            switch (chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getPetType()) {
+                case "Ёж":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/sonic_collect.png"));
+                        chiefWindowController.getEarnMoneyWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case "Заяц":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/pinky_collect.png"));
+                        chiefWindowController.getEarnMoneyWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case "Лис":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/puppy_collect.png"));
+                        chiefWindowController.getEarnMoneyWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+            }
 
-        askPeopleForMoneyButton = new JButton("Попросить у прохожих");
-        askPeopleForMoneyButton.setActionCommand("askPeopleForMoneyButtonPressed");
-        askPeopleForMoneyButton.addActionListener(earnMoneyWindowController);
+            int coinsAmount = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getCoinsAmount();
+            coinsAmount += 20;
+            chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setCoinsAmount(coinsAmount);
+            chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("OwnerProperty", 0, 1);
+        });
 
-        okayEarnMoneyButton = new JButton("Закончить заработок");
-        okayEarnMoneyButton.setActionCommand("okayEarnMoneyButtonPressed");
-        okayEarnMoneyButton.addActionListener(earnMoneyWindowController);
+        JButton askPeopleForMoneyButton = new JButton("Попросить у прохожих");
+        askPeopleForMoneyButton.addActionListener(e -> {
+            switch (chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getPetType()) {
+                case "Ёж":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/sonic_collect.png"));
+                        chiefWindowController.getEarnMoneyWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case "Заяц":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/pinky_collect.png"));
+                        chiefWindowController.getEarnMoneyWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case "Лис":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/puppy_collect.png"));
+                        chiefWindowController.getEarnMoneyWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+            }
+
+            int coinsAmount = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getCoinsAmount();
+
+            if ((int) (Math.random() * 2) == 1) {
+                coinsAmount++;
+                chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setCoinsAmount(coinsAmount);
+                chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("OwnerProperty", 0, 1);
+            }
+        });
+
+        JButton okayEarnMoneyButton = new JButton("Закончить заработок");
+        okayEarnMoneyButton.addActionListener(e -> {
+            chiefWindowController.getEarnMoneyWindow().getEarnMoneyFrame().setVisible(false);
+        });
 
         goWorkButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         sellSomethingButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -89,12 +179,8 @@ public class EarnMoneyWindowView {
         earnMoneyFrame.add(petPicture);
         earnMoneyFrame.add(buttonsPanel);
         earnMoneyFrame.setIconImage(new ImageIcon("resources/icon.png").getImage());
-        earnMoneyFrame.setLocationRelativeTo(tamagotchiModelController.getWelcomeWindowView().getWelcomeFrame());
+        earnMoneyFrame.setLocationRelativeTo(null);
         earnMoneyFrame.setVisible(true);
-    }
-
-    public EarnMoneyWindowView(TamagotchiModelController tamagotchiModelController) {
-        createEarnMoneyWindow(tamagotchiModelController);
     }
 }
 

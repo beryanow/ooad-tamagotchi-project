@@ -1,36 +1,27 @@
 package ru.nsu.g.beryanov.shegoleva.tamagotchi.updaters;
 
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.ModelPropertyChange;
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.model.TamagotchiModel;
+import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.ChiefWindowController;
 
-import java.util.TimerTask;
+import java.beans.PropertyChangeSupport;
 
-public class VivacityStateInfoUpdater extends TimerTask {
-    private final ModelPropertyChange modelPropertyChange;
-    private TamagotchiModel tamagotchiModel;
-
-    public VivacityStateInfoUpdater(ModelPropertyChange modelPropertyChange, TamagotchiModel tamagotchiModel) {
-        this.modelPropertyChange = modelPropertyChange;
-        this.tamagotchiModel = tamagotchiModel;
+public class VivacityStateInfoUpdater extends AbstractUpdater {
+    public VivacityStateInfoUpdater(PropertyChangeSupport modelPropertyChange, ChiefWindowController chiefWindowController) {
+        super(modelPropertyChange, chiefWindowController);
     }
 
-    private void accessVivacity() {
-        int vivacityState = tamagotchiModel.getVivacityState();
-        if (vivacityState + 5 < 100) {
-            vivacityState += 5;
-        }
-        tamagotchiModel.setVivacityState(vivacityState);
+    @Override
+    void access() {
+        getChiefWindowController().getTamagotchiModelController().accessSatiety();
     }
 
-    private void updateInfo() {
-        modelPropertyChange.firePropertyChange("VivacityStateProperty", 0, 1);
+    @Override
+    void updateInfo() {
+        getModelPropertyChange().firePropertyChange("VivacityStateProperty", 0, 1);
     }
 
     @Override
     public void run() {
-        synchronized (modelPropertyChange) {
-            accessVivacity();
-        }
+        access();
         updateInfo();
     }
 }

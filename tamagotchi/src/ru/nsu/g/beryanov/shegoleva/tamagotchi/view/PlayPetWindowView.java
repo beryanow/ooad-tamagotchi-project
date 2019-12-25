@@ -1,7 +1,6 @@
 package ru.nsu.g.beryanov.shegoleva.tamagotchi.view;
 
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.TamagotchiModelController;
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.PlayPetWindowController;
+import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.ChiefWindowController;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -10,37 +9,116 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class PlayPetWindowView {
+public class PlayPetWindowView extends JFrame {
     private JFrame playPetFrame;
     private JLabel petPicture;
-    private JButton tossBallButton;
-    private JButton playGameOfTagButton;
-    private JButton okayPlayPetButton;
 
-    public JLabel getPetPicture() {
+    private JLabel getPetPicture() {
         return petPicture;
     }
 
-    public JFrame getPlayPetFrame() {
+    private JFrame getPlayPetFrame() {
         return playPetFrame;
     }
 
-    private void createPlayPetWindow(TamagotchiModelController tamagotchiModelController) {
+    public void createPlayPetWindow(ChiefWindowController chiefWindowController) {
         playPetFrame = new JFrame("Игра с питомцем");
         playPetFrame.getContentPane().setBackground(Color.white);
 
-        PlayPetWindowController playPetWindowController = new PlayPetWindowController(this, tamagotchiModelController);
-        okayPlayPetButton = new JButton("Закончить игру");
-        okayPlayPetButton.setActionCommand("okayPetPlayButtonPressed");
-        okayPlayPetButton.addActionListener(playPetWindowController);
+        JButton okayPlayPetButton = new JButton("Закончить игру");
+        okayPlayPetButton.addActionListener(e -> {
+            chiefWindowController.getPlayPetWindow().getPlayPetFrame().setVisible(false);
+        });
 
-        tossBallButton = new JButton("Бросить мячик");
-        tossBallButton.setActionCommand("tossBallButtonPressed");
-        tossBallButton.addActionListener(playPetWindowController);
+        JButton tossBallButton = new JButton("Бросить мячик");
+        tossBallButton.addActionListener(e -> {
+            switch (chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getPetType()) {
+                case "Ёж":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/sonic_collect.png"));
+                        chiefWindowController.getPlayPetWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case "Заяц":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/pinky_collect.png"));
+                        chiefWindowController.getPlayPetWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case "Лис":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/puppy_collect.png"));
+                        chiefWindowController.getPlayPetWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+            }
 
-        playGameOfTagButton = new JButton("Играть в догонялки");
-        playGameOfTagButton.setActionCommand("playGameOfTagButtonPressed");
-        playGameOfTagButton.addActionListener(playPetWindowController);
+            int happinessState = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getHappinessState();
+            happinessState = Math.min(happinessState + 10, 100);
+            chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setHappinessState(happinessState);
+            chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("HappinessStateProperty", 0, 1);
+
+            int vivacityState = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getVivacityState();
+            vivacityState = Math.max(vivacityState - 10, 0);
+            chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setVivacityState(vivacityState);
+            chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("VivacityStateProperty", 0, 1);
+
+            int satietyState = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getSatietyState();
+            satietyState = Math.max(satietyState - 2, 0);
+            chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setSatietyState(satietyState);
+            chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("SatietyStateProperty", 0, 1);
+        });
+
+        JButton playGameOfTagButton = new JButton("Играть в догонялки");
+        playGameOfTagButton.addActionListener(e -> {
+            switch (chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getPetType()) {
+                case "Ёж":
+                    try {
+                        BufferedImage bufferedPicture = ImageIO.read(new File("resources/sonic_run.png"));
+                        chiefWindowController.getPlayPetWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case "Заяц":
+                    try {
+                        BufferedImage bufferedPicture = ImageIO.read(new File("resources/pinky_run.png"));
+                        chiefWindowController.getPlayPetWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case "Лис":
+                    try {
+                        BufferedImage bufferedPicture = ImageIO.read(new File("resources/puppy_run.png"));
+                        chiefWindowController.getPlayPetWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+            }
+
+            int happinessState = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getHappinessState();
+            happinessState = Math.min(happinessState + 20, 100);
+            chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setHappinessState(happinessState);
+            chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("HappinessStateProperty", 0, 1);
+
+            int vivacityState = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getVivacityState();
+            vivacityState = Math.max(vivacityState - 20, 0);
+            chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setVivacityState(vivacityState);
+            chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("VivacityStateProperty", 0, 1);
+
+            int satietyState = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getSatietyState();
+            satietyState = Math.max(satietyState - 4, 0);
+            chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setSatietyState(satietyState);
+            chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("SatietyStateProperty", 0, 1);
+        });
 
         playGameOfTagButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         tossBallButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -57,7 +135,7 @@ public class PlayPetWindowView {
 
         BufferedImage bufferedPicture = null;
         try {
-            switch (tamagotchiModelController.getTamagotchiModel().getPetType()) {
+            switch (chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getPetType()) {
                 case "Ёж":
                     bufferedPicture = ImageIO.read(new File("resources/sonic_wait.png"));
                     break;
@@ -69,7 +147,7 @@ public class PlayPetWindowView {
                     break;
             }
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         petPicture = new JLabel(new ImageIcon(bufferedPicture));
 
@@ -79,12 +157,8 @@ public class PlayPetWindowView {
         playPetFrame.add(petPicture);
         playPetFrame.add(buttonsPanel);
         playPetFrame.setIconImage(new ImageIcon("resources/icon.png").getImage());
-        playPetFrame.setLocationRelativeTo(tamagotchiModelController.getWelcomeWindowView().getWelcomeFrame());
+        playPetFrame.setLocationRelativeTo(null);
         playPetFrame.setVisible(true);
-    }
-
-    public PlayPetWindowView(TamagotchiModelController tamagotchiModelController) {
-        createPlayPetWindow(tamagotchiModelController);
     }
 }
 

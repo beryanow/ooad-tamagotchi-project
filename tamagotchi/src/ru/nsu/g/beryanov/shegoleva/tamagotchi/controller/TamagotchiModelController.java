@@ -1,76 +1,62 @@
 package ru.nsu.g.beryanov.shegoleva.tamagotchi.controller;
 
 import ru.nsu.g.beryanov.shegoleva.tamagotchi.model.TamagotchiModel;
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.view.*;
+
+import java.beans.PropertyChangeSupport;
 
 public class TamagotchiModelController {
     private TamagotchiModel tamagotchiModel;
-    private CreatePetWindowView selectPetWindow;
-    private WelcomeWindowView welcomeWindowView;
-    private GameWindowView gameWindowView;
-    private EnterOwnerWindowView enterOwnerWindow;
-    private PlayPetWindowView playPetWindow;
-    private VisitDoctorWindowView visitDoctorWindow;
-    private VisitShopWindowView visitShopWindow;
-    private EarnMoneyWindowView earnMoneyWindow;
-    private WalkPetWindowView walkPetWindow;
-    private FeedPetWindowView feedPetWindow;
-    private ModelPropertyChange modelPropertyChange;
+    private PropertyChangeSupport modelPropertyChange;
 
-    public void setModelPropertyChange(ModelPropertyChange modelPropertyChange) {
+    public void accessHealth() {
+        if ((tamagotchiModel.getHappinessState() == 0) || (tamagotchiModel.getSatietyState() == 0)) {
+            int healthState = tamagotchiModel.getHealthState();
+            if (healthState > 0) {
+                --healthState;
+            }
+            tamagotchiModel.setHealthState(healthState);
+        }
+    }
+
+    public void accessSatiety() {
+        int satietyState = tamagotchiModel.getSatietyState();
+        if (satietyState > 0) {
+            --satietyState;
+        }
+        tamagotchiModel.setSatietyState(satietyState);
+    }
+
+    public void accessVivacity() {
+        int vivacityState = tamagotchiModel.getVivacityState();
+        if (vivacityState + 5 < 100) {
+            vivacityState += 5;
+        }
+        tamagotchiModel.setVivacityState(vivacityState);
+    }
+
+    public void accessHappiness() {
+        if (tamagotchiModel.getHealthState() < 30) {
+            int happinessState = tamagotchiModel.getHappinessState();
+            if (happinessState > 0) {
+                --happinessState;
+            }
+            tamagotchiModel.setHappinessState(happinessState);
+        }
+    }
+
+    void setModelPropertyChange(PropertyChangeSupport modelPropertyChange) {
         this.modelPropertyChange = modelPropertyChange;
     }
 
-    ModelPropertyChange getModelPropertyChange() {
+    public TamagotchiModelController() {
+        this.tamagotchiModel = new TamagotchiModel();
+    }
+
+    public PropertyChangeSupport getModelPropertyChange() {
         return modelPropertyChange;
-    }
-
-    public TamagotchiModelController(WelcomeWindowView welcomeWindowView) {
-        this.welcomeWindowView = welcomeWindowView;
-        tamagotchiModel = new TamagotchiModel();
-    }
-
-    void setFeedPetWindow(FeedPetWindowView feedPetWindow) {
-        this.feedPetWindow = feedPetWindow;
-    }
-
-    void setWalkPetWindow(WalkPetWindowView walkPetWindow) {
-        this.walkPetWindow = walkPetWindow;
-    }
-
-    void setEarnMoneyWindow(EarnMoneyWindowView earnMoneyWindow) {
-        this.earnMoneyWindow = earnMoneyWindow;
-    }
-
-    void setVisitShopWindow(VisitShopWindowView visitShopWindow) {
-        this.visitShopWindow = visitShopWindow;
-    }
-
-    void setVisitDoctorWindow(VisitDoctorWindowView visitDoctorWindow) {
-        this.visitDoctorWindow = visitDoctorWindow;
-    }
-
-    void setSelectPetWindow(CreatePetWindowView selectPetWindow) {
-        this.selectPetWindow = selectPetWindow;
-    }
-
-    void setEnterOwnerWindow(EnterOwnerWindowView enterOwnerWindow) {
-        this.enterOwnerWindow = enterOwnerWindow;
-    }
-
-    void setGameWindowView(GameWindowView gameWindowView) {
-        this.gameWindowView = gameWindowView;
-    }
-
-    void setPlayPetWindow(PlayPetWindowView playPetWindow) {
-        this.playPetWindow = playPetWindow;
     }
 
     public TamagotchiModel getTamagotchiModel() {
         return tamagotchiModel;
-    }
-
-    public WelcomeWindowView getWelcomeWindowView() {
-        return welcomeWindowView;
     }
 }

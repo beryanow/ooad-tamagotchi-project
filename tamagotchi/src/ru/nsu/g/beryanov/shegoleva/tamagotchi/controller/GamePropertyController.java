@@ -1,46 +1,41 @@
 package ru.nsu.g.beryanov.shegoleva.tamagotchi.controller;
 
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.model.TamagotchiModel;
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.view.GameWindowView;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class GamePropertyController implements PropertyChangeListener {
-    private GameWindowView gameWindow;
-    private TamagotchiModel tamagotchiModel;
+    private ChiefWindowController chiefWindowController;
 
-    public GamePropertyController(GameWindowView gameWindow, TamagotchiModel tamagotchiModel) {
-        this.gameWindow = gameWindow;
-        this.tamagotchiModel = tamagotchiModel;
+    GamePropertyController(ChiefWindowController chiefWindowController) {
+        this.chiefWindowController = chiefWindowController;
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent changeEvent) {
         switch (changeEvent.getPropertyName()) {
             case "OwnerProperty":
-                gameWindow.getOwnerName().setText(tamagotchiModel.getOwnerName());
-                gameWindow.getCoinsAmount().setText(String.valueOf(tamagotchiModel.getCoinsAmount()));
-                gameWindow.getOwnerAge().setText(String.valueOf(tamagotchiModel.getOwnerGender()));
-                gameWindow.getFoodAmount().setText(String.valueOf(tamagotchiModel.getFoodAmount()));
-                gameWindow.getWaterAmount().setText(String.valueOf(tamagotchiModel.getDrinkAmount()));
+                chiefWindowController.getGameWindow().getOwnerName().setText(chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getOwnerName());
+                chiefWindowController.getGameWindow().getCoinsAmount().setText(String.valueOf(chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getCoinsAmount()));
+                chiefWindowController.getGameWindow().getOwnerAge().setText(String.valueOf(chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getOwnerGender()));
+                chiefWindowController.getGameWindow().getFoodAmount().setText(String.valueOf(chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getFoodAmount()));
+                chiefWindowController.getGameWindow().getWaterAmount().setText(String.valueOf(chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getDrinkAmount()));
                 break;
             case "PetProperty":
-                gameWindow.getPetName().setText(tamagotchiModel.getPetName());
-                gameWindow.getPetAge().setText(String.valueOf(tamagotchiModel.getPetAge()));
-                gameWindow.getPetType().setText(tamagotchiModel.getPetType());
+                chiefWindowController.getGameWindow().getPetName().setText(chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getPetName());
+                chiefWindowController.getGameWindow().getPetAge().setText(String.valueOf(chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getPetAge()));
+                chiefWindowController.getGameWindow().getPetType().setText(chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getPetType());
                 break;
             case "HappinessStateProperty":
-                gameWindow.getHappinessBar().setValue(tamagotchiModel.getHappinessState());
+                chiefWindowController.getGameWindow().getHappinessBar().setValue(chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getHappinessState());
                 break;
             case "SatietyStateProperty":
-                gameWindow.getSatietyBar().setValue(tamagotchiModel.getSatietyState());
+                chiefWindowController.getGameWindow().getSatietyBar().setValue(chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getSatietyState());
                 break;
             case "VivacityStateProperty":
-                gameWindow.getVivacityBar().setValue(tamagotchiModel.getVivacityState());
+                chiefWindowController.getGameWindow().getVivacityBar().setValue(chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getVivacityState());
                 break;
             case "HealthStateProperty":
-                gameWindow.getHealthBar().setValue(tamagotchiModel.getHealthState());
+                chiefWindowController.getGameWindow().getHealthBar().setValue(chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getHealthState());
                 break;
         }
     }

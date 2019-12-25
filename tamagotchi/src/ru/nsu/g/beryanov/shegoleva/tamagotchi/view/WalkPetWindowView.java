@@ -1,7 +1,6 @@
 package ru.nsu.g.beryanov.shegoleva.tamagotchi.view;
 
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.TamagotchiModelController;
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.WalkPetWindowController;
+import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.ChiefWindowController;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -10,28 +9,21 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class WalkPetWindowView {
+public class WalkPetWindowView extends JFrame {
     private JFrame walkPetFrame;
-    private JButton batheLakeButton;
-    private JButton forestHuntButton;
-    private JButton returnHomeWalkPetButton;
     private JLabel petPicture;
 
-    public JLabel getPetPicture() {
+    private JLabel getPetPicture() {
         return petPicture;
     }
 
-    public JFrame getWalkPetFrame() {
-        return walkPetFrame;
-    }
-
-    private void createWalkPetWindow(TamagotchiModelController tamagotchiModelController) {
+    public void createWalkPetWindow(ChiefWindowController chiefWindowController) {
         walkPetFrame = new JFrame("Прогулка с питомцем");
         walkPetFrame.getContentPane().setBackground(Color.white);
 
         BufferedImage bufferedPicture = null;
         try {
-            switch (tamagotchiModelController.getTamagotchiModel().getPetType()) {
+            switch (chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getPetType()) {
                 case "Ёж":
                     bufferedPicture = ImageIO.read(new File("resources/sonic_wait.png"));
                     break;
@@ -43,22 +35,113 @@ public class WalkPetWindowView {
                     break;
             }
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         petPicture = new JLabel(new ImageIcon(bufferedPicture));
 
-        WalkPetWindowController walkPetWindowController = new WalkPetWindowController(this, tamagotchiModelController);
-        returnHomeWalkPetButton = new JButton("Вернуться домой");
-        returnHomeWalkPetButton.setActionCommand("returnHomeWalkPetButtonPressed");
-        returnHomeWalkPetButton.addActionListener(walkPetWindowController);
+        JButton returnHomeWalkPetButton = new JButton("Вернуться домой");
+        returnHomeWalkPetButton.addActionListener(e -> walkPetFrame.setVisible(false));
 
-        batheLakeButton = new JButton("Покупаться в озере");
-        batheLakeButton.setActionCommand("batheLakeButtonPressed");
-        batheLakeButton.addActionListener(walkPetWindowController);
+        JButton batheLakeButton = new JButton("Покупаться в озере");
+        batheLakeButton.addActionListener(e -> {
+            switch (chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getPetType()) {
+                case "Ёж":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/sonic_enjoy.png"));
+                        chiefWindowController.getWalkPetWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case "Заяц":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/pinky_enjoy.png"));
+                        chiefWindowController.getWalkPetWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case "Лис":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/puppy_enjoy.png"));
+                        chiefWindowController.getWalkPetWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+            }
 
-        forestHuntButton = new JButton("Охотиться в лесу");
-        forestHuntButton.setActionCommand("forestHuntButtonPressed");
-        forestHuntButton.addActionListener(walkPetWindowController);
+            int happinessState = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getHappinessState();
+            happinessState = Math.min(happinessState + 50, 100);
+            chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setHappinessState(happinessState);
+            chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("HappinessStateProperty", 0, 1);
+
+            int vivacityState = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getVivacityState();
+            vivacityState = Math.max(vivacityState - 10, 0);
+            chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setVivacityState(vivacityState);
+            chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("VivacityStateProperty", 0, 1);
+
+            int satietyState = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getSatietyState();
+            satietyState = Math.max(satietyState - 2, 0);
+            chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setSatietyState(satietyState);
+            chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("SatietyStateProperty", 0, 1);
+
+            int healthState = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getHealthState();
+            healthState = Math.min(healthState + 20, 100);
+            chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setHealthState(healthState);
+            chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("HealthStateProperty", 0, 1);
+        });
+
+
+        JButton forestHuntButton = new JButton("Охотиться в лесу");
+        forestHuntButton.addActionListener(e -> {
+            switch (chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getPetType()) {
+                case "Ёж":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/sonic_enjoy.png"));
+                        chiefWindowController.getWalkPetWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case "Заяц":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/pinky_enjoy.png"));
+                        chiefWindowController.getWalkPetWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case "Лис":
+                    try {
+                        BufferedImage bufferedPicture1 = ImageIO.read(new File("resources/puppy_enjoy.png"));
+                        chiefWindowController.getWalkPetWindow().getPetPicture().setIcon(new ImageIcon(bufferedPicture1));
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+            }
+
+            int happinessState = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getHappinessState();
+            happinessState = Math.min(happinessState + 25, 100);
+            chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setHappinessState(happinessState);
+            chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("HappinessStateProperty", 0, 1);
+
+            int vivacityState = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getVivacityState();
+            vivacityState = Math.max(vivacityState - 25, 0);
+            chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setVivacityState(vivacityState);
+            chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("VivacityStateProperty", 0, 1);
+
+            int satietyState = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getSatietyState();
+            satietyState = Math.max(satietyState - 4, 0);
+            chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setSatietyState(satietyState);
+            chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("SatietyStateProperty", 0, 1);
+
+            int healthState = chiefWindowController.getTamagotchiModelController().getTamagotchiModel().getHealthState();
+            healthState = Math.min(healthState + 30, 100);
+            chiefWindowController.getTamagotchiModelController().getTamagotchiModel().setHealthState(healthState);
+            chiefWindowController.getTamagotchiModelController().getModelPropertyChange().firePropertyChange("HealthStateProperty", 0, 1);
+        });
 
         forestHuntButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         batheLakeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -79,12 +162,8 @@ public class WalkPetWindowView {
         walkPetFrame.add(petPicture);
         walkPetFrame.add(buttonsPanel);
         walkPetFrame.setIconImage(new ImageIcon("resources/icon.png").getImage());
-        walkPetFrame.setLocationRelativeTo(tamagotchiModelController.getWelcomeWindowView().getWelcomeFrame());
+        walkPetFrame.setLocationRelativeTo(null);
         walkPetFrame.setVisible(true);
-    }
-
-    public WalkPetWindowView(TamagotchiModelController tamagotchiModelController) {
-        createWalkPetWindow(tamagotchiModelController);
     }
 }
 

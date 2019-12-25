@@ -1,36 +1,27 @@
 package ru.nsu.g.beryanov.shegoleva.tamagotchi.updaters;
 
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.ModelPropertyChange;
-import ru.nsu.g.beryanov.shegoleva.tamagotchi.model.TamagotchiModel;
+import ru.nsu.g.beryanov.shegoleva.tamagotchi.controller.ChiefWindowController;
 
-import java.util.TimerTask;
+import java.beans.PropertyChangeSupport;
 
-public class SatietyStateInfoUpdater extends TimerTask {
-    private final ModelPropertyChange modelPropertyChange;
-    private TamagotchiModel tamagotchiModel;
-
-    public SatietyStateInfoUpdater(ModelPropertyChange modelPropertyChange, TamagotchiModel tamagotchiModel) {
-        this.modelPropertyChange = modelPropertyChange;
-        this.tamagotchiModel = tamagotchiModel;
+public class SatietyStateInfoUpdater extends AbstractUpdater {
+    public SatietyStateInfoUpdater(PropertyChangeSupport modelPropertyChange, ChiefWindowController chiefWindowController) {
+        super(modelPropertyChange, chiefWindowController);
     }
 
-    private void accessSatiety() {
-        int satietyState = tamagotchiModel.getSatietyState();
-        if (satietyState > 0) {
-            --satietyState;
-        }
-        tamagotchiModel.setSatietyState(satietyState);
+    @Override
+    void access() {
+        getChiefWindowController().getTamagotchiModelController().accessSatiety();
     }
 
-    private void updateInfo() {
-        modelPropertyChange.firePropertyChange("SatietyStateProperty", 0, 1);
+    @Override
+    void updateInfo() {
+        getModelPropertyChange().firePropertyChange("SatietyStateProperty", 0, 1);
     }
 
     @Override
     public void run() {
-        synchronized (modelPropertyChange) {
-            accessSatiety();
-        }
+        access();
         updateInfo();
     }
 }
